@@ -103,8 +103,8 @@ func (in *CronJobSpec) DeepCopyInto(out *CronJobSpec) {
 		*out = new(int32)
 		**out = **in
 	}
-	if in.FailedJobHistoryLimit != nil {
-		in, out := &in.FailedJobHistoryLimit, &out.FailedJobHistoryLimit
+	if in.FailedJobsHistoryLimit != nil {
+		in, out := &in.FailedJobsHistoryLimit, &out.FailedJobsHistoryLimit
 		*out = new(int32)
 		**out = **in
 	}

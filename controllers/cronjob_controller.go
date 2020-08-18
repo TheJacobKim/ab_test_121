@@ -159,6 +159,27 @@ func (r *CronJobReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 		return ctrl.Result{}, err
 	}
 
+	// NB: deleting these is "best effort" -- if we fail on a particular one,
+	// we won't requeue just to finish the deleting.
+	if cronJob.Spec.FailedJobsHistoryLimit != nil {
+		sort.Slice(failedJobs, func(i, j int) bool {
+			if failedJobs[i].Status.StartTime == nil {
+				return failedJobs[j].Status.StartTime != nil
+			}
+			return failedJobs[i].Status.StartTime.Before(failedJobs[j].Status.StartTime)
+		})
+		for i, job := range failedJobs {
+			if int32(i) >= int32(len(failedJobs))-*cronJob.Spec.FailedJobsHistoryLimit {
+				break
+			}
+			if err := r.Delete(ctx, job, client.PropagationPolicy(metav1.DeletePropagationBackground)); client.IgnoreNotFound(err) != nil {
+				log.Error(err, "unable to delete old failed job", "job", job)
+			} else {
+				log.V(0).Info("deleted old failed job", "job", job)
+			}
+		}
+	}
+
 	return ctrl.Result{}, nil
 }
 

@@ -79,7 +79,7 @@ type CronJobSpec struct {
 	// The number of failed finished jobs to retain.
 	// This is a pointer to distinguish between explicit zero and not specified.
 	// +optional
-	FailedJobHistoryLimit *int32 `json:"failedJobsHistoryLimit,omitempty"`
+	FailedJobsHistoryLimit *int32 `json:"failedJobsHistoryLimit,omitempty"`
 }
 
 // CronJobStatus defines the observed state of CronJob
