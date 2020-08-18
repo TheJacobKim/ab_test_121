@@ -1,0 +1,7 @@
+domain: cronjob.jacobkim.io
+repo: github.com/jacobhjkim/cronjob-tutorial
+resources:
+- group: batch
+  kind: CronJob
+  version: v1
+version: "2"
